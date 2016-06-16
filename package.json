@@ -1,0 +1,38 @@
+{
+  "name": "falcor-lazy-model",
+  "main": "index.js",
+  "version": "0.0.0",
+  "description": "Call falcor methods before a falcor model is created",
+  "license": "MIT",
+  "repository": "ajoslin/falcor-async",
+  "author": {
+    "name": "Andrew Joslin",
+    "email": "andrewtjoslin@gmail.com",
+    "url": "ajoslin.com"
+  },
+  "scripts": {
+    "test": "standard && tape test.js"
+  },
+  "keywords": [
+    "falcor",
+    "async",
+    "lazy",
+    "callback"
+  ],
+  "devDependencies": {
+    "geval": "~2.1.1",
+    "next-tick": "~1.0.0",
+    "standard": "^7.0.0",
+    "tape": "^4.0.0"
+  },
+  "files": [
+    "index.js",
+    "test.js"
+  ],
+  "dependencies": {
+    "ap": "~0.2.0",
+    "dezalgo": "~1.0.3",
+    "lazy-async": "~1.0.1",
+    "to-array": "~0.1.4"
+  }
+}
