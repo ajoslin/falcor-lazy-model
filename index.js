@@ -55,7 +55,7 @@ function wrapModel (falcorModel, methods) {
   }
 
   function setLocal () {
-    const localModel = falcorModel.withoutDataSource()
+    var localModel = falcorModel.withoutDataSource()
     return localModel.set.apply(localModel, arguments)
   }
 }
