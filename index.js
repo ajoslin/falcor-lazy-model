@@ -71,12 +71,13 @@ function FalcorAsync (getModel) {
     var method = customMethods[methodName] || falcorModel[methodName]
     var result = method.apply(falcorModel, args)
 
-    if (result && typeof result.then === 'function') {
-      result
-        .then(function then (value) {
+    if (result && typeof result.subscribe === 'function') {
+      result.subscribe(
+        function onData (value) {
           callback(null, value)
-        })
-        .catch(callback)
+        },
+        callback
+      )
     } else {
       callback(null, result)
     }
