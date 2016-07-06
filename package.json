@@ -30,7 +30,6 @@
     "test.js"
   ],
   "dependencies": {
-    "lazy-async": "~1.0.1",
     "to-array": "~0.1.4"
   }
 }
