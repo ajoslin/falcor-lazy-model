@@ -1,7 +1,7 @@
 {
   "name": "falcor-lazy-model",
   "main": "index.js",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Call falcor methods before a falcor model is created",
   "license": "MIT",
   "repository": "ajoslin/falcor-async",
