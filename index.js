@@ -13,6 +13,7 @@ var LAZY_METHODS = [
 ]
 
 var customMethods = {
+  // These are called with `this` set to the falcorModel instance
   setLocal: function setLocal () {
     var localModel = this.withoutDataSource()
     return localModel.set.apply(localModel, arguments)
@@ -30,19 +31,24 @@ function FalcorAsync (getModel) {
   var falcorModel
   var listeners = []
 
-  getModel(function onModel (model) {
+  getModel(onInstantiate)
+
+  return LAZY_METHODS.reduce(function reduceMethods (acc, methodName) {
+    acc[methodName] = wrapMethod(methodName)
+    return acc
+  }, {})
+
+  function onInstantiate (model) {
     falcorModel = model
 
-    listeners.forEach(function (data) {
+    listeners.forEach(function callQueuedMethods (data) {
       runMethod(data[0], data[1])
     })
-    listeners.length = 0
-  })
+    listeners = []
+  }
 
-  return LAZY_METHODS.reduce(reduceMethod, {})
-
-  function reduceMethod (acc, methodName) {
-    acc[methodName] = function method () {
+  function wrapMethod (methodName) {
+    return function wrapped () {
       var args = toArray(arguments)
 
       if (!falcorModel) {
@@ -51,15 +57,15 @@ function FalcorAsync (getModel) {
         runMethod(methodName, args)
       }
     }
-
-    return acc
   }
 
   function runMethod (methodName, args) {
-    var callback = callbackFromArgs(args)
+    var callback = typeof args[args.length - 1] === 'function'
+      ? args.pop()
+      : noop
 
-    var fn = customMethods[methodName] || falcorModel[methodName]
-    var result = fn.apply(falcorModel, args)
+    var method = customMethods[methodName] || falcorModel[methodName]
+    var result = method.apply(falcorModel, args)
 
     if (result && typeof result.then === 'function') {
       result
@@ -71,10 +77,4 @@ function FalcorAsync (getModel) {
       callback(null, result)
     }
   }
-}
-
-function callbackFromArgs (args) {
-  return typeof args[args.length - 1] === 'function'
-    ? args.pop()
-    : noop
 }
