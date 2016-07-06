@@ -3,6 +3,7 @@
 var test = require('tape')
 var FalcorAsync = require('./')
 var Event = require('geval/event')
+var Rx = require('rx')
 var nextTick = require('next-tick')
 
 test(function (t) {
@@ -41,10 +42,10 @@ test('promises', function (t) {
   var model = FalcorAsync(function (callback) {
     callback({
       get: function () {
-        return Promise.reject('nope')
+        return Rx.Observable.throw('nope')
       },
       set: function () {
-        return Promise.resolve('yep')
+        return Rx.Observable.of('yep')
       }
     })
   })

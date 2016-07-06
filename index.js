@@ -67,6 +67,7 @@ function FalcorAsync (getModel) {
     var callback = typeof args[args.length - 1] === 'function'
       ? args.pop()
       : noop
+    var called = false
 
     var method = customMethods[methodName] || falcorModel[methodName]
     var result = method.apply(falcorModel, args)
@@ -74,9 +75,14 @@ function FalcorAsync (getModel) {
     if (result && typeof result.subscribe === 'function') {
       result.subscribe(
         function onData (value) {
+          called = true
           callback(null, value)
         },
-        callback
+        callback,
+        function onComplete () {
+          if (called) return
+          callback()
+        }
       )
     } else {
       callback(null, result)

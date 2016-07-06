@@ -22,6 +22,7 @@
   "devDependencies": {
     "geval": "~2.1.1",
     "next-tick": "~1.0.0",
+    "rx": "~4.1.0",
     "standard": "^7.0.0",
     "tape": "^4.0.0"
   },
