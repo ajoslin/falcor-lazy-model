@@ -78,7 +78,10 @@ function FalcorAsync (getModel) {
           called = true
           callback(null, value)
         },
-        callback,
+        function onError (error) {
+          called = true
+          callback(error)
+        },
         function onComplete () {
           if (called) return
           callback()
