@@ -2,6 +2,8 @@
 
 var toArray = require('to-array')
 
+function noop () {}
+
 var LAZY_METHODS = [
   'get',
   'set',
@@ -11,19 +13,20 @@ var LAZY_METHODS = [
   'setLocal',
   'falcorModel'
 ]
-
 var customMethods = {
   // These are called with `this` set to the falcorModel instance
   setLocal: function setLocal () {
-    var localModel = this.withoutDataSource()
+    var localModel = this.withoutDataSource().unbatch()
     return localModel.set.apply(localModel, arguments)
+  },
+  getLocal: function getLocal () {
+    var localModel = this.withoutDataSource().unbatch()
+    return localModel.get.apply(localModel, arguments)
   },
   falcorModel: function falcorModel () {
     return this
   }
 }
-
-function noop () {}
 
 module.exports = FalcorAsync
 

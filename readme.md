@@ -1,22 +1,23 @@
-# falcor-async [![Build Status](https://travis-ci.org/ajoslin/falcor-async.svg?branch=master)](https://travis-ci.org/ajoslin/falcor-async)
+# falcor-lazy-model [![Build Status](https://travis-ci.org/ajoslin/falcor-lazy-model.svg?branch=master)](https://travis-ci.org/ajoslin/falcor-lazy-model)
 
 > Call falcor methods before a falcor model is created
 
 ## Install
 
 ```
-$ npm install --save falcor-async
+$ npm install --save falcor-lazy-model
 ```
 
 
 ## Usage
 
 ```js
-var FalcorAsync = require('falcor-async')
+var LazyModel = require('falcor-lazy-model')
+var FalcorModel = require('falcor').Model
 
-var model = FalcorAsync(function getModel (callback) {
+var model = LazyModel(function getModel (callback) {
   // wait until auth is done, and then...
-  callback(new require('falcor').Model({
+  callback(new FalcorModel({
     //..options
   })
 })
@@ -28,7 +29,7 @@ model.get(['foo', 'bar'], ['baz', 'bang'], function (error, data) {
 
 ## API
 
-#### `FalcorAsync(function getModel)` -> `asyncModel`
+#### `LazyModel(function getModel)` -> `asyncModel`
 
 ##### getModel
 
@@ -39,7 +40,7 @@ A function which takes a callback. Call the callback with `(error, falcorModel)`
 
 #### `asyncModel`
 
-Returned from FalcorAsync constructor. Has methods `get`, `set`, `call`, `invalidate`, `getValue`, `onPathChange`.
+Returned from LazyModel constructor. Has methods `get`, `set`, `call`, `invalidate`, `getValue`.
 
 All of these take the normal arguments, with one exception: they don't return promises, instead they accept an additional `(error, data)` callback at the end.
 
