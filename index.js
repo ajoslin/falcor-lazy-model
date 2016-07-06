@@ -11,6 +11,7 @@ var LAZY_METHODS = [
   'invalidate',
   'getValue',
   'setLocal',
+  'getLocal',
   'falcorModel'
 ]
 var customMethods = {
