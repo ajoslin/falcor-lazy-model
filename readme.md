@@ -16,7 +16,7 @@ var FalcorAsync = require('falcor-async')
 
 var model = FalcorAsync(function getModel (callback) {
   // wait until auth is done, and then...
-  callback(null, new require('falcor').Model({
+  callback(new require('falcor').Model({
     //..options
   })
 })

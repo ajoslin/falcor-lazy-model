@@ -11,7 +11,7 @@ test(function (t) {
   var LoadEvent = Event()
   const model = FalcorAsync(function (callback) {
     LoadEvent.listen(function () {
-      callback(null, {
+      callback({
         get: function () {
           callCount++
         }
@@ -39,7 +39,7 @@ test('promises', function (t) {
   t.plan(4)
 
   var model = FalcorAsync(function (callback) {
-    callback(null, {
+    callback({
       get: function () {
         return Promise.reject('nope')
       },

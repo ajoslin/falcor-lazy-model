@@ -1,9 +1,6 @@
 'use strict'
 
-var Lazy = require('lazy-async')
-var dezalgo = require('dezalgo')
 var toArray = require('to-array')
-var partial = require('ap').partial
 
 var LAZY_METHODS = [
   'get',
@@ -15,55 +12,69 @@ var LAZY_METHODS = [
   'falcorModel'
 ]
 
-module.exports = FalcorAsync
-
-function FalcorAsync (getModel) {
-  return Lazy(LAZY_METHODS, function lazy (callback) {
-    getModel(function (error, falcorModel) {
-      if (error) return callback(error)
-
-      callback(null, wrapModel(falcorModel, LAZY_METHODS))
-    })
-  })
-}
-
-function wrapModel (falcorModel, methods) {
-  return methods.reduce(function (acc, methodName) {
-    if (!acc[methodName]) {
-      acc[methodName] = wrapMethod(falcorModel[methodName])
-    }
-    return acc
-  }, {
-    falcorModel: wrapMethod(function () {
-      return falcorModel
-    }),
-    setLocal: wrapMethod(setLocal)
-  })
-
-  function wrapMethod (method) {
-    return function wrapped () {
-      var args = toArray(arguments)
-      var callback = asyncCallback(args)
-
-      var result = method.apply(falcorModel, args)
-      if (result && typeof result.then === 'function') {
-        result.then(partial(callback, null)).catch(callback)
-      } else {
-        callback(null, result)
-      }
-    }
-  }
-
-  function setLocal () {
-    var localModel = falcorModel.withoutDataSource()
+var customMethods = {
+  setLocal: function setLocal () {
+    var localModel = this.withoutDataSource()
     return localModel.set.apply(localModel, arguments)
+  },
+  falcorModel: function falcorModel () {
+    return this
   }
-}
-
-function asyncCallback (args) {
-  return typeof args[args.length - 1] === 'function'
-    ? dezalgo(args.pop())
-    : noop
 }
 
 function noop () {}
+
+module.exports = FalcorAsync
+
+function FalcorAsync (getModel) {
+  var falcorModel
+  var listeners = []
+
+  getModel(function onModel (model) {
+    falcorModel = model
+
+    listeners.forEach(function (data) {
+      runMethod(data[0], data[1])
+    })
+    listeners.length = 0
+  })
+
+  return LAZY_METHODS.reduce(reduceMethod, {})
+
+  function reduceMethod (acc, methodName) {
+    acc[methodName] = function method () {
+      var args = toArray(arguments)
+
+      if (!falcorModel) {
+        listeners.push([methodName, args])
+      } else {
+        runMethod(methodName, args)
+      }
+    }
+
+    return acc
+  }
+
+  function runMethod (methodName, args) {
+    var callback = callbackFromArgs(args)
+
+    var fn = customMethods[methodName] || falcorModel[methodName]
+    var result = fn.apply(falcorModel, args)
+
+    if (result && typeof result.then === 'function') {
+      result
+        .then(function then (value) {
+          callback(null, value)
+        })
+        .catch(callback)
+    } else {
+      callback(null, result)
+    }
+  }
+}
+
+function callbackFromArgs (args) {
+  return typeof args[args.length - 1] === 'function'
+    ? args.pop()
+    : noop
+}

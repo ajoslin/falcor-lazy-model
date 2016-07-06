@@ -30,8 +30,6 @@
     "test.js"
   ],
   "dependencies": {
-    "ap": "~0.2.0",
-    "dezalgo": "~1.0.3",
     "lazy-async": "~1.0.1",
     "to-array": "~0.1.4"
   }
