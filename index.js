@@ -84,7 +84,7 @@ function FalcorAsync (getModel) {
         },
         function onComplete () {
           if (called) return
-          callback()
+          callback(null, undefined)
         }
       )
     } else {
