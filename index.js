@@ -9,6 +9,7 @@ var LAZY_METHODS = [
   'set',
   'call',
   'invalidate',
+  'getCache',
   'getValue',
   'setLocal',
   'getLocal',
