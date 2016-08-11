@@ -13,8 +13,10 @@ var LAZY_METHODS = [
   'getValue',
   'setLocal',
   'getLocal',
-  'falcorModel'
+  'falcorModel',
+  'deref'
 ]
+
 var customMethods = {
   // These are called with `this` set to the falcorModel instance
   setLocal: function setLocal () {
