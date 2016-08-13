@@ -44,7 +44,7 @@ function FalcorAsync (getModel) {
     acc[methodName] = wrapMethod(methodName)
     return acc
   }, {
-    '_falcor-lazy-model': true
+    _falcorLazyModel: true
   })
 
   function onInstantiate (model) {
