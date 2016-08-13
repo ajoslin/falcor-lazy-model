@@ -43,7 +43,9 @@ function FalcorAsync (getModel) {
   return LAZY_METHODS.reduce(function reduceMethods (acc, methodName) {
     acc[methodName] = wrapMethod(methodName)
     return acc
-  }, {})
+  }, {
+    '_falcor-lazy-model': true
+  })
 
   function onInstantiate (model) {
     falcorModel = model
